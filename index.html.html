@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新生降落 || 明志工智學程 IAI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        /* 科技白與克萊因藍設定 */
+        :root {
+            --bg-white: #f4f6f9; 
+            --klein-blue: #002fa7; 
+            --text-main: #1a1f24; 
+            --text-sub: #4a5568;
+            --accent-cyan: #00d2ff;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: var(--bg-white);
+            color: var(--text-main);
+            overflow-x: hidden;
+            background-image: 
+                linear-gradient(rgba(0, 47, 167, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 47, 167, 0.05) 1px, transparent 1px);
+            background-size: 30px 30px;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Orbitron', 'Noto Sans TC', sans-serif;
+            text-transform: uppercase;
+        }
+
+        /* 導覽列優化：雙語雙層結構與懸停動態 */
+        nav {
+            position: fixed;
+            top: 20px;
+            right: -20px;
+            background: var(--klein-blue);
+            padding: 12px 40px 12px 20px;
+            transform: skewX(-20deg);
+            z-index: 9999;
+            box-shadow: -5px 5px 0px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid var(--accent-cyan);
+            transition: all 0.3s ease;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 20px;
+            transform: skewX(20deg);
+        }
+
+        nav ul li a {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #ffffff;
+            text-decoration: none;
+            position: relative;
+            padding: 5px 10px;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        nav ul li a::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--accent-cyan);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+            transform-origin: right;
+        }
+
+        nav ul li a .en {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 900;
+            font-size: 1rem;
+            letter-spacing: 1px;
+        }
+
+        nav ul li a .zh {
+            font-family: 'Noto Sans TC', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 700;
+            opacity: 0.6;
+            margin-top: 2px;
+            transition: opacity 0.3s;
+        }
+
+        nav ul li a:hover {
+            color: var(--accent-cyan);
+            transform: translateY(-5px);
+        }
+
+        nav ul li a:hover::before {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+
+        nav ul li a:hover .zh {
+            opacity: 1;
+            color: #ffffff;
+        }
+
+        /* 破格主視覺 Hero Section */
+        #hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            padding-left: 5vw;
+            position: relative;
+        }
+
+        .glitch {
+            font-size: clamp(3rem, 7vw, 6rem);
+            font-weight: 900;
+            position: relative;
+            color: var(--klein-blue);
+            text-shadow: 0.05em 0 0 rgba(0, 210, 255, 0.7), -0.025em -0.05em 0 rgba(26, 31, 36, 0.3);
+            animation: glitch 2s infinite alternate;
+            margin-bottom: 10px;
+            line-height: 1.1;
+        }
+
+        @keyframes glitch {
+            0% { text-shadow: 0.05em 0 0 rgba(0,210,255,0.7), -0.025em -0.05em 0 rgba(26,31,36,0.3); }
+            15% { text-shadow: -0.05em -0.025em 0 rgba(0,210,255,0.7), 0.025em 0.025em 0 rgba(26,31,36,0.3); }
+            50% { text-shadow: 0.025em 0.05em 0 rgba(0,210,255,0.7), 0.05em 0 0 rgba(26,31,36,0.3); }
+            100% { text-shadow: -0.025em 0 0 rgba(0,210,255,0.7), -0.025em -0.025em 0 rgba(26,31,36,0.3); }
+        }
+
+        .subtitle {
+            font-size: clamp(0.9rem, 1.5vw, 1.2rem);
+            color: #ffffff;
+            letter-spacing: 3px;
+            font-weight: 700;
+            background: var(--klein-blue);
+            padding: 8px 20px;
+            border-left: 6px solid var(--text-main);
+            display: inline-block;
+            margin-top: 10px;
+        }
+
+        /* 無縫跑馬燈 Marquee */
+        .marquee-container {
+            width: 100%;
+            background: var(--klein-blue);
+            color: #ffffff;
+            padding: 15px 0;
+            transform: rotate(-2deg) scale(1.05);
+            margin: 30px 0 80px 0;
+            overflow: hidden;
+            white-space: nowrap;
+            position: relative;
+            z-index: 10;
+            box-shadow: 0 10px 20px rgba(0, 47, 167, 0.2);
+        }
+
+        .marquee {
+            display: inline-block;
+            font-size: 1.2rem;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 900;
+            letter-spacing: 2px;
+            animation: scroll 15s linear infinite;
+        }
+
+        @keyframes scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* 區塊與動畫設定 */
+        .section-wrapper {
+            padding: 20px 5vw 80px 5vw;
+            overflow: hidden;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .content-block {
+            background: #ffffff;
+            border: 3px solid var(--text-main);
+            padding: 40px 40px;
+            margin-bottom: 60px;
+            position: relative;
+            opacity: 0;
+            transition: opacity 0.8s ease-out, transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.8s ease;
+        }
+
+        .tech-label {
+            position: absolute;
+            top: -15px;
+            background: var(--text-main);
+            color: #fff;
+            padding: 5px 15px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            z-index: 2;
+        }
+
+        .fly-left { transform: translateX(-50px) rotate(-2deg); }
+        .fly-left .tech-label { left: 20px; }
+
+        .fly-right { transform: translateX(50px) rotate(2deg); border-color: var(--klein-blue); }
+        .fly-right .tech-label { right: 20px; background: var(--klein-blue); }
+        .fly-right h2 { color: var(--text-main) !important; }
+
+        /* 觸發後的狀態 */
+        .content-block.visible {
+            opacity: 1;
+            transform: translateX(0) rotate(0deg);
+            box-shadow: 12px 12px 0px var(--klein-blue);
+        }
+        .content-block.fly-right.visible {
+            box-shadow: -12px 12px 0px var(--text-main);
+        }
+
+        .content-block h2 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: var(--klein-blue);
+            border-bottom: 2px dashed #cbd5e0;
+            padding-bottom: 10px;
+            display: inline-block;
+        }
+
+        .content-block p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: var(--text-sub);
+            text-align: justify;
+            margin-bottom: 15px;
+        }
+
+        .highlight {
+            background: rgba(0, 47, 167, 0.1);
+            color: var(--klein-blue);
+            padding: 2px 6px;
+            font-weight: 900;
+            border-radius: 4px;
+        }
+
+        /* 網格系統卡片 (用於學程特色、課程模組) */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .card {
+            border: 2px solid var(--text-main);
+            padding: 20px;
+            background: var(--bg-white);
+            transition: 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 6px 6px 0px var(--klein-blue);
+            border-color: var(--klein-blue);
+        }
+
+        .card h4 {
+            color: var(--klein-blue);
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+            border-left: 4px solid var(--accent-cyan);
+            padding-left: 10px;
+        }
+
+        .card ul {
+            list-style: square inside;
+            color: var(--text-sub);
+            line-height: 1.8;
+        }
+
+        /* 職涯標籤 */
+        .job-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .tag {
+            background: var(--text-main);
+            color: white;
+            padding: 8px 15px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            border-radius: 20px;
+        }
+        .tag.blue { background: var(--klein-blue); }
+
+        /* 訊息區塊 (給新生的話) */
+        .message-box {
+            background: var(--text-main);
+            color: #fff;
+            padding: 30px;
+            border-left: 8px solid var(--accent-cyan);
+            margin: 20px 0;
+            font-style: italic;
+        }
+        .message-box p { color: #d0d8e0; font-size: 1rem; }
+        .message-box .quote { font-size: 1.2rem; color: var(--accent-cyan); font-weight: bold; margin-top: 15px;}
+
+        /* 互動式手風琴 (FAQ) */
+        details {
+            border: 2px solid var(--text-main);
+            margin-bottom: 10px;
+            background: #fff;
+            transition: all 0.3s;
+        }
+        details:hover { border-color: var(--klein-blue); }
+        summary {
+            padding: 15px 20px;
+            font-weight: 900;
+            font-size: 1.1rem;
+            cursor: pointer;
+            background: var(--bg-white);
+            color: var(--text-main);
+            outline: none;
+        }
+        summary:hover { color: var(--klein-blue); }
+        details p {
+            padding: 15px 20px;
+            margin: 0;
+            border-top: 1px dashed #ccc;
+            background: #fff;
+        }
+
+        /* 科技按鈕連結 */
+        .action-btn {
+            display: inline-block;
+            background: var(--klein-blue);
+            color: white;
+            padding: 12px 25px;
+            text-decoration: none;
+            font-weight: 900;
+            margin: 5px;
+            border: 2px solid transparent;
+            transition: 0.3s;
+            text-transform: uppercase;
+        }
+        .action-btn:hover {
+            background: var(--bg-white);
+            color: var(--klein-blue);
+            border-color: var(--klein-blue);
+            box-shadow: 4px 4px 0px var(--text-main);
+        }
+
+        /* 待更新區塊 */
+        .pending-box {
+            text-align: center;
+            padding: 30px;
+            background: repeating-linear-gradient(45deg, #f4f6f9, #f4f6f9 10px, #e2e8f0 10px, #e2e8f0 20px);
+            border: 2px dashed #a0aec0;
+            color: #718096;
+            font-weight: 900;
+            letter-spacing: 2px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            background: var(--klein-blue);
+            color: #ffffff;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
+
+        /* 製作人小字設計 */
+        footer .credit {
+            margin-top: 15px;
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.5);
+            font-family: 'Noto Sans TC', sans-serif;
+            letter-spacing: 1px;
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                top: auto;
+                bottom: 0;
+                right: 0;
+                width: 100%;
+                transform: none;
+                justify-content: center;
+                border-left: none;
+                border-top: 4px solid var(--accent-cyan);
+            }
+            nav ul { transform: none; flex-wrap: wrap; justify-content: center; gap: 10px; }
+            .glitch { font-size: 2.5rem; }
+            .content-block { padding: 30px 20px; margin-bottom: 40px; }
+            .content-block.visible { box-shadow: 6px 6px 0px var(--klein-blue); transform: translateX(0); }
+            .content-block.fly-right.visible { box-shadow: -6px 6px 0px var(--text-main); transform: translateX(0); }
+            .fly-left, .fly-right { transform: translateY(30px); } 
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <ul>
+            <li><a href="#intro"><span class="en">INTRO</span><span class="zh">關於學程</span></a></li>
+            <li><a href="#course"><span class="en">MODULES</span><span class="zh">課程模組</span></a></li>
+            <li><a href="#activities"><span class="en">EVENTS</span><span class="zh">系學會</span></a></li>
+            <li><a href="#faq"><span class="en">FAQ</span><span class="zh">常見問題</span></a></li>
+            <li><a href="#system"><span class="en">SYSTEM</span><span class="zh">選課與規章</span></a></li>
+        </ul>
+    </nav>
+
+    <section id="hero">
+        <div class="glitch" data-text="INDUSTRIAL AI">INDUSTRIAL AI</div>
+        <div class="glitch" data-text="PROGRAM" style="font-size: clamp(2rem, 5vw, 4rem); color: var(--text-main);">PROGRAM</div>
+        <div class="subtitle">明志科技大學 // 工業人工智慧學程</div>
+    </section>
+
+    <div class="marquee-container">
+        <div class="marquee">
+            SYSTEM ONLINE // AI + X CROSS-DOMAIN // PYTHON & MACHINE LEARNING // SMART MANUFACTURING // SYSTEM ONLINE // AI + X CROSS-DOMAIN // PYTHON & MACHINE LEARNING //
+        </div>
+    </div>
+
+    <div class="section-wrapper">
+        
+        <!-- 關於我們 & 核心特色 -->
+        <div id="intro" class="content-block fly-left">
+            <div class="tech-label">DATA.01 / ABOUT</div>
+            <h2>關於我們</h2>
+            <p>工業人工智慧學程（IAI）結合 <span class="highlight">人工智慧（AI）</span> 與 <span class="highlight">工業專業知識（X）</span>，培養兼具程式設計、資料分析、機器學習及工業應用能力的 <strong>AI+X 人才</strong>。</p>
+            <p>我們不僅學習技術，更重視將 AI 實際應用於製造業、自動化設備、智慧工廠與工業數據分析，讓學生具備解決真實產業問題的能力。</p>
+            
+            <h2 style="margin-top: 30px; font-size: 1.5rem;">學程核心特色</h2>
+            <div class="grid-container">
+                <div class="card">
+                    <h4>AI + X 跨領域學習</h4>
+                    <p>不僅學做AI模型，更學習資料科學、智慧機電等搶手知識，成為操縱 AI 浪潮的掌舵者。</p>
+                </div>
+                <div class="card">
+                    <h4>實作導向教學</h4>
+                    <p>透過專題與產學合作，將所學轉化為真實作品，從成就感中愛上專業。</p>
+                </div>
+                <div class="card">
+                    <h4>企業實習機會</h4>
+                    <p>大三前往企業實習，結合學校 AI 研究中心資源，提早接軌職場。</p>
+                </div>
+                <div class="card">
+                    <h4>國際交流</h4>
+                    <p>與美國辛辛那提大學（UC）合作，邀請國外師資授課，拓展國際視野。</p>
+                </div>
+            </div>
+
+            <h2 style="margin-top: 30px; font-size: 1.5rem;">我們的優勢</h2>
+            <div class="job-tags">
+                <span class="tag blue">三明治教學（課程＋實習＋課程）</span>
+                <span class="tag blue">AI研究中心資源</span>
+                <span class="tag blue">產學合作機會豐富</span>
+                <span class="tag blue">理論與實務並重</span>
+                <span class="tag blue">畢業即戰力</span>
+            </div>
+        </div>
+
+        <!-- 課程模組與未來發展 -->
+        <div id="course" class="content-block fly-right">
+            <div class="tech-label">DATA.02 / COURSE</div>
+            <h2>課程模組</h2>
+            <div class="grid-container">
+                <div class="card">
+                    <h4>資訊工程模組</h4>
+                    <ul><li>Python程式設計</li><li>資料結構</li><li>網路技術</li><li>演算法</li></ul>
+                </div>
+                <div class="card">
+                    <h4>資料科學模組</h4>
+                    <ul><li>資料分析</li><li>大數據處理</li><li>資料探勘</li></ul>
+                </div>
+                <div class="card">
+                    <h4>智慧辨識模組</h4>
+                    <ul><li>機器學習</li><li>深度學習</li><li>電腦視覺</li></ul>
+                </div>
+                <div class="card">
+                    <h4>智慧機電模組</h4>
+                    <ul><li>感測器應用</li><li>自動控制</li><li>智慧製造</li></ul>
+                </div>
+            </div>
+
+            <h2 style="margin-top: 40px;">畢業後可以做什麼？</h2>
+            <p>可繼續攻讀人工智慧、資訊工程、資料科學等碩博士學位，或投入以下專業職位：</p>
+            <div class="job-tags">
+                <span class="tag">AI應用工程師</span>
+                <span class="tag">機器學習工程師</span>
+                <span class="tag">資料分析師</span>
+                <span class="tag">資料工程師</span>
+                <span class="tag">智慧製造工程師</span>
+                <span class="tag">自動化系統工程師</span>
+            </div>
+        </div>
+
+        <!-- 給新生的話 & 系學會 -->
+        <div id="activities" class="content-block fly-left">
+            <div class="tech-label">DATA.03 / MESSAGE</div>
+            <h2>給新生的話</h2>
+            <div class="message-box">
+                <p>歡迎大家加入工智這個大家庭！在大學的四年裡，你可以自由選擇自己想過的生活。你可以選擇跨出舒適圈，參加競賽、拓展人脈；這些選擇沒有絕對的對錯，重要的是願意為決定負責。</p>
+                <p>大學是成為大人的過程，從現在開始很多事需要自己做決定。正如某位日本高中生曾說過：</p>
+                <div class="quote">「有些事可以逃避，有些事是不能逃避的。沒有必要去做可以逃避的事，但如果不去面對那些無法逃避的事，就無法繼續前進。」</div>
+                <p style="margin-top: 15px;">希望未來四年，你能在工智找到方向，結交志同道合的朋友，寫下屬於自己的精彩大學生活！</p>
+            </div>
+
+            <h2 style="margin-top: 40px;">系學會活動介紹</h2>
+            <div class="grid-container">
+                <div class="card"><h4>迎新活動 (9月中)</h4><p>帶你認識學程特色與校園，幫助快速融入大學生活。</p></div>
+                <div class="card"><h4>系烤活動 (11月底)</h4><p>期中考後的放鬆，烤肉聊天認識不同年級的同學。</p></div>
+                <div class="card"><h4>聖誕晚會 (聖誕週)</h4><p>節慶氣氛最濃！展現才藝、認識朋友的好機會。</p></div>
+                <div class="card"><h4>帶動服務 (下學期初)</h4><p>走進中小學陪伴學弟妹，提升表達與團隊合作能力。</p></div>
+                <div class="card"><h4>實習講座 (3月底)</h4><p>業界專家與學長姐分享職涯經驗與產業趨勢。</p></div>
+                <div class="card"><h4>尾牙 & 送舊 (期中/期末)</h4><p>歡樂聚餐回顧點滴，並為即將畢業的學長姐送上祝福。</p></div>
+            </div>
+        </div>
+
+        <!-- 常見問題與社團 -->
+        <div id="faq" class="content-block fly-right">
+            <div class="tech-label">SYS.FAQ / HELP</div>
+            <h2>常見問題 (FAQ)</h2>
+            
+            <details>
+                <summary>Q：我們學程有需要選課嗎？</summary>
+                <p>A：不用，我們學程在大一不用選課，因為我們的必修超滿。</p>
+            </details>
+            <details>
+                <summary>Q：上課使用電腦比例高嗎？需要入學前買筆電嗎？</summary>
+                <p>A：看個人需求。牽涉實作的課教室通常會配電腦，學程之後也會發電腦（直到大四才要還學校）。</p>
+            </details>
+            <details>
+                <summary>Q：榮譽學程獎學金續領的機率高嗎？</summary>
+                <p>A：蠻高的，沒有續領到的大多數是倒在多益成績上面，操行也要注意不要太低。</p>
+            </details>
+            <details>
+                <summary>Q：可以開車到宿舍門口放東西嗎？叫外送能到樓下嗎？</summary>
+                <p>A：開車可以直接開進去，30分鐘內免費。外送可以叫到樓下，但有時間限制，超時會被擋在校門外。</p>
+            </details>
+            <details>
+                <summary>Q：課本一定要買嗎？室友可以挑嗎？</summary>
+                <p>A：英文課本一定要，其餘看需求，可找學長買二手。大一不能挑室友（照號碼排），大二才能跟同學選同一間。</p>
+            </details>
+
+            <h2 style="margin-top: 40px;">校內社團分類</h2>
+            <p>開學第一週會有社團博覽會，分為三大類：</p>
+            <div class="job-tags" style="margin-bottom: 10px;">
+                <span class="tag blue">學藝/康樂</span>
+                <span class="tag">卡牌音遊</span> <span class="tag">攝影</span> <span class="tag">吉他</span> <span class="tag">熱舞</span> <span class="tag">學生方程式賽車</span> <span class="tag">...等15個社團</span>
+            </div>
+            <div class="job-tags" style="margin-bottom: 10px;">
+                <span class="tag blue">體育性質</span>
+                <span class="tag">羽球</span> <span class="tag">排球</span> <span class="tag">桌球</span> <span class="tag">籃球</span> <span class="tag">射箭</span> <span class="tag">...等10個社團</span>
+            </div>
+            <div class="job-tags">
+                <span class="tag blue">服務性質</span>
+                <span class="tag">崇德志工</span> <span class="tag">親善大使</span> <span class="tag">急救暨野外求生</span> <span class="tag">...等8個社團</span>
+            </div>
+        </div>
+
+        <!-- 選課與規章 (包含未定內容與連結) -->
+        <div id="system" class="content-block fly-left">
+            <div class="tech-label">SYS.LINKS / RULES</div>
+            <h2>系統連結與規章</h2>
+            
+            <p>重要系統入口：</p>
+            <a href="https://info.mcut.edu.tw/freshyear/" target="_blank" class="action-btn">🔗 新生資訊專區</a>
+            <a href="http://day.course.mcut.edu.tw/" target="_blank" class="action-btn">🔗 學生網路選課系統</a>
+            <a href="#" class="action-btn">🌐 工智學程官方網站</a>
+
+            <h2 style="margin-top: 40px;">行政規章 (籌備中)</h2>
+            <div class="grid-container">
+                <div class="pending-box">系費繳納方式<br>SYSTEM UPDATE PENDING...</div>
+                <div class="pending-box">畢業門檻<br>SYSTEM UPDATE PENDING...</div>
+                <div class="pending-box">操行分數加扣分<br>SYSTEM UPDATE PENDING...</div>
+                <div class="pending-box">幹部聯絡方式<br>SYSTEM UPDATE PENDING...</div>
+            </div>
+        </div>
+
+    </div>
+
+    <footer>
+        <div>&copy; 2026 MING CHI IAI DEPT. // END OF TRANSMISSION.</div>
+        <div class="credit">U14627007 工業人工智慧系學會副會長 吳克鋼 製作</div>
+    </footer>
+
+    <!-- 修正版 JavaScript：確保動畫精準觸發 -->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const blocks = document.querySelectorAll('.content-block');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, {
+                threshold: 0.05,
+                rootMargin: "0px 0px -50px 0px" 
+            });
+
+            blocks.forEach(block => {
+                observer.observe(block);
+            });
+            
+            setTimeout(() => {
+                if(blocks[0] && !blocks[0].classList.contains('visible')){
+                    blocks[0].classList.add('visible');
+                }
+            }, 2000);
+        });
+    </script>
+</body>
+</html>
